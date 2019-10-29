@@ -1,21 +1,22 @@
 {
-  "name": "scheduler",
+  "name": "taskbox",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "classnames": "^2.2.6",
-    "normalize.css": "^8.0.1",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
-    "react-scripts": "3.0.0"
+    "react-scripts": "3.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "storybook": "start-storybook -p 9009 -s public --ci",
+    "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
   },
   "browserslist": {
     "production": [
@@ -30,19 +31,9 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.6.4",
     "@storybook/addon-actions": "^5.2.5",
-    "@storybook/addon-backgrounds": "^5.2.5",
     "@storybook/addon-links": "^5.2.5",
     "@storybook/addons": "^5.2.5",
-    "@storybook/react": "^5.2.5",
-    "@testing-library/jest-dom": "^4.2.0",
-    "@testing-library/react": "^8.0.9",
-    "node-sass": "^4.13.0"
-  },
-  "jest": {
-    "watchPathIgnorePatterns": [
-      "<rootDir>/node_modules/"
-    ]
+    "@storybook/react": "^5.2.5"
   }
 }
