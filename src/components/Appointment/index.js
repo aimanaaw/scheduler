@@ -5,6 +5,7 @@ import Show from "./Show";
 import Empty from "./Empty";
 
 export default function Appointment (props) {
+  console.log(props)
   // const appointmentTime = props
   return (
     <article className="appointment">
