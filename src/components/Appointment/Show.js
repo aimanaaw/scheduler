@@ -3,7 +3,6 @@ import classNames from "classnames";
 
 
 export default function Show(props) {
-  console.log("TESTING THE PROPS", props)
   const showClass = classNames({ 'appointment--show': true, 'appointment__card': true, 'appointment__actions': true });
   return (
     <main className="appointment__card appointment__card--show">

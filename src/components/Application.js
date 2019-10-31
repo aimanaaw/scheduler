@@ -33,7 +33,7 @@ export default function Application(props) {
       const daysResponse = all[0].data;
       const appointmentsResponse = all[1].data;
       const interviewersResponse = all[2].data;
-      // console.log("Interviewers Response!!!!",interviewersResponse);
+      console.log("Interviewers Response!!!!",interviewersResponse);
       setState(prev => {
         return ({...prev, days: daysResponse, appointments: appointmentsResponse, interviewers: interviewersResponse});
       })
@@ -67,6 +67,7 @@ export default function Application(props) {
       <section className="schedule">
         {getAppointmentsForDay(state, state.day).map(eachAppointment => {
           const interview = getInterview(state, eachAppointment.interview);
+          console.log("XXXXX", interview)
           return (
             <Appointment
               key={eachAppointment.id}
@@ -77,7 +78,7 @@ export default function Application(props) {
 
           )
         })}
-        <Appointment key="last" time="5pm" />
+        {/* <Appointment key="last" time="5pm" /> */}
         {/* Replace this with the schedule elements durint the "The Scheduler" activity. */}
       </section>
     </main>
