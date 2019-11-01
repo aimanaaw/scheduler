@@ -8,7 +8,6 @@ import {getAppointmentsForDay} from "../helpers/selectors";
 import {getInterview} from "../helpers/selectors";
 import {getInterviewersForDay} from "../helpers/selectors";
 import { stat } from "fs";
-
 export default function Application(props) {
 
   const [state, setState] = useState({
@@ -18,16 +17,23 @@ export default function Application(props) {
     interviewers: {}
   });
 
-  function bookInterview(id, interview) {
-    console.log(id, interview);
+  const bookInterview = function (id, interview) {
+    const appt = {...state.appointments[id], interview: interview  }; return axios.put(`http://localhost:8001/api/appointments/` + id, appt)
+    .then(() => {
+      setState((prev) => ({...prev, appointments: {...prev.appointments, [id]: {...prev.appointments[id], interview:interview}}}));
+    })
   };
 
+  // const cancelInterview = function(interviewId) {
+  //   console.log(state.appointments.1);
+  // }
+
   const setDay = function (day) {
-    setState ({...state, day: day})
+    setState ((prevState) => ({...prevState, day: day}));
   };
 
   const setDays = function(days) {
-    setState(prev => ({ ...state, days }));
+    setState(prev => ({ ...prev, days }));
   }
   useEffect(() => {
     Promise.all([
@@ -73,15 +79,17 @@ export default function Application(props) {
       <section className="schedule">
         {getAppointmentsForDay(state, state.day).map(eachAppointment => {
           const interview = getInterview(state, eachAppointment.interview);
+          const interviewer = getInterviewersForDay(state, state.day)
           return (
             <Appointment
               key={eachAppointment.id}
               id={eachAppointment.id}
               time={eachAppointment.time}
               interview={interview}
-              bookInterview={bookInterview(eachAppointment.id, interview)}
+              bookInterview={bookInterview}
               day={state.day}
               state={state}
+              interviewer={interviewer}
             />
 
           )
