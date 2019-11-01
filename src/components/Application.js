@@ -24,9 +24,13 @@ export default function Application(props) {
     })
   };
 
-  // const cancelInterview = function(interviewId) {
-  //   console.log(state.appointments.1);
-  // }
+  const cancelInterview = function(interviewId) {
+    // const deleteAppointment = {...state.appointments[interviewId], interview: null};
+    return axios.delete(`http://localhost:8001/api/appointments/` + interviewId)
+    .then(() => {
+      setState((prev) => ({...prev, appointments: {...prev.appointments, [interviewId]: {...prev.appointments[interviewId], interview:null}}}));
+    })
+  }
 
   const setDay = function (day) {
     setState ((prevState) => ({...prevState, day: day}));
@@ -90,6 +94,7 @@ export default function Application(props) {
               day={state.day}
               state={state}
               interviewer={interviewer}
+              cancelInterview={cancelInterview}
             />
 
           )

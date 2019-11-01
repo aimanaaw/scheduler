@@ -14,9 +14,15 @@ export default function Appointment(props) {
   const SHOW = "SHOW";
   const CREATE = "CREATE";
   const STATUS = "STATUS";
+  const EDIT = "EDIT";
+
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
+
+  function editFunction (selectedId) {
+    transition(EDIT);
+  }
 
   function save(name, interviewer) {
     transition(STATUS);
@@ -27,6 +33,11 @@ export default function Appointment(props) {
     return props.bookInterview(props.id, interview)
   }
 
+  function cancelInterview() {
+    transition(STATUS);
+    props.cancelInterview(props.id).then(() => transition(EMPTY))
+  }
+
   function onSave(enteredName, selectedInterviewer) {
     save(enteredName, selectedInterviewer).then(() => transition(SHOW));
   };
@@ -34,7 +45,7 @@ export default function Appointment(props) {
   function onCancel() {
     back();
   };
-
+  console.log(props.interview)
   return (
     <article className="appointment">
       <Header time={props.time} />
@@ -46,6 +57,17 @@ export default function Appointment(props) {
         <Show
           student={props.interview.student}
           interviewer={props.interview.interviewer}
+          onDelete={cancelInterview}
+          onEdit={editFunction}
+        />
+      )}
+      {mode === EDIT && (
+        <Form
+          name={props.interview.student}
+          interviewer={props.interview.interviewer.id}
+          interviewers={getInterviewersForDay(props.state, props.day)} onCancel={onCancel}
+          onSave={onSave}
+          editCheck={true}
         />
       )}
 
