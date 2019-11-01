@@ -23,4 +23,29 @@ export function getInterview(state, interview) {
   return getInterviewObject;
 }
 
+export function getInterviewersForDay(state, day) {
+  const  appointments = getAppointmentsForDay(state, day);
+
+  // console.log(appointments);
+  const interviewerIdArray = [];
+  appointments.map( eachAppointment => {
+    // console.log("TESTING ------ >", eachAppointment)
+    // console.log("LOGING---> ", eachAppointment.interview)
+    if (eachAppointment.interview) {
+      interviewerIdArray.push(eachAppointment.interview.interviewer);
+    }
+  })
+  // console.log("CHECKING", interviewerIdArray);
+
+  const arrayOfInterviewers = interviewerIdArray.map(eachInterviewerId => {
+    return state.interviewers[eachInterviewerId];
+  })
+  // console.log("HELLOOOO", arrayOfInterviewers);
+
+  return arrayOfInterviewers;
+  // return interviewerIdArray;
+
+
+}
+
 
