@@ -4,7 +4,9 @@ import Header from "./Header";
 import Show from "./Show";
 import Empty from "./Empty";
 import Form from "./Form";
+import Error from "./Error";
 import Status from "./Status";
+import Confirm from "./Confirm";
 import useVisualMode from "../../hooks/useVisualMode";
 import {getInterviewersForDay} from "../../helpers/selectors";
 
@@ -15,6 +17,8 @@ export default function Appointment(props) {
   const CREATE = "CREATE";
   const STATUS = "STATUS";
   const EDIT = "EDIT";
+  const ERROR_SAVE = "ERROR_SAVE";
+  const CONFIRM = "CONFIRM";
 
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
@@ -30,7 +34,12 @@ export default function Appointment(props) {
       student: name,
       interviewer
     };
+    
     return props.bookInterview(props.id, interview)
+  }
+
+  function confirmDelete() {
+    transition(CONFIRM);
   }
 
   function cancelInterview() {
@@ -39,7 +48,7 @@ export default function Appointment(props) {
   }
 
   function onSave(enteredName, selectedInterviewer) {
-    save(enteredName, selectedInterviewer).then(() => transition(SHOW));
+    save(enteredName, selectedInterviewer).then(() => transition(SHOW)).catch(error => transition(ERROR_SAVE));
   };
 
   function onCancel() {
@@ -51,13 +60,22 @@ export default function Appointment(props) {
       <Header time={props.time} />
 
       {mode === EMPTY && <Empty onAdd={() => {transition(CREATE)}} />}
+      {mode === ERROR_SAVE && <Error />}
       {mode === CREATE && <Form interviewers={getInterviewersForDay(props.state, props.day)} onCancel={onCancel} onSave={onSave} />}
       {mode === STATUS && <Status />}
+      {mode === CONFIRM && (
+        <Confirm
+          student={props.interview.student}
+          interviewer={props.interview.interviewer}
+          onConfirm={cancelInterview}
+          onCancel={onCancel}
+        />
+      )}
       {mode === SHOW && (
         <Show
           student={props.interview.student}
           interviewer={props.interview.interviewer}
-          onDelete={cancelInterview}
+          onDelete={confirmDelete}
           onEdit={editFunction}
         />
       )}
@@ -70,6 +88,7 @@ export default function Appointment(props) {
           editCheck={true}
         />
       )}
+
 
     </article>
   )
