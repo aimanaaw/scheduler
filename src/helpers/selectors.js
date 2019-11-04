@@ -13,7 +13,6 @@ export function getAppointmentsForDay(state, day) {
 
 export function getInterview(state, interview) {
   if(!interview || !interview.interviewer) {
-    console.log("TESTING --->")
     return null;
   };
   const getInterviewObject = {
@@ -31,7 +30,7 @@ export function getInterviewersForDay(state, day) {
   let interviewerIdArray = [];
 
   state.days.forEach( d => {
-    if (d.name === day) {
+    if (d.name === day && d.interviewers) {
       interviewerIdArray = [...d.interviewers]
     };
   })

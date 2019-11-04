@@ -94,8 +94,10 @@ test("getInterviewersForDay returns an array", () => {
   expect(Array.isArray(result)).toBe(true);
 });
 
-test("getInterviewersForDay returns an array with a length matching the number of appointments for that day", () => {
+test("getInterviewersForDay returns an array with a length matching the number of interviewers for that day", () => {
   const result = getInterviewersForDay(state, "Monday");
+  console.log("TESTING STATE", state)
+  console.log("TESTING THE TEST", result)
   expect(result.length).toEqual(3);
 });
 

@@ -12,7 +12,7 @@ const SET_INTERVIEW = "SET_INTERVIEW";
 function reducer(state, action) {
   switch (action.type) {
     case SET_DAY:
-      return { ...state, day: action.value }
+      return { ...state, day: action.payload }
     case SET_APPLICATION_DATA:
       return { ...state, ...action.payload }
     case SET_INTERVIEW:
@@ -34,30 +34,29 @@ export default function useApplicationData() {
   });
 
   useEffect(() => {
+    ws.onmessage = (event) => {
+      const receivedData = JSON.parse(event.data);
+      console.log("THE payload is", receivedData);
+      const id = receivedData.id;
+      const interview = receivedData.interview;
+      const type = receivedData.type;
+      switch (type) {
+        case "SET_INTERVIEW":
+          console.log("ID::", id);
+          console.log("Interview::", interview)
+          dispatch({
+            type: SET_INTERVIEW,
+            payload: { appointments: { ...state.appointments, [id]: { ...state.appointments[id], interview: interview } } }
+          })
+          break;
+        default:
+          console.log("TESTING DEFAULT");
+      }
+    }
     ws.onopen = (() => {
       ws.send("ping");
-      ws.onmessage = (event) => {
-        const receivedData = JSON.parse(event.data);
-        console.log("THE payload is", receivedData);
-        const id = receivedData.id;
-        const interview = receivedData.interview;
-        const type = receivedData.type;
-        switch (type) {
-          case "SET_INTERVIEW":
-            console.log("ID::", id);
-            console.log("Interview::", interview)
-            dispatch({
-              type: SET_INTERVIEW,
-              payload: { appointments: { ...state.appointments, [id]: { ...state.appointments[id], interview: interview } } }
-            })
-            break;
-          default:
-            console.log("TESTING DEFAULT");
-        }
-      }
     });
-  }
-    , [])
+  })
 
 
 
@@ -80,21 +79,6 @@ export default function useApplicationData() {
         })
       })
   }
-  // Promise.all([
-  //   axios.get(`http://localhost:8001/api/days`),
-  //   axios.get(`http://localhost:8001/api/appointments`),
-  //   axios.get(`http://localhost:8001/api/interviewers`)
-  // ])
-  // .then((all) => {
-  //   const daysResponse = all[0].data;
-  //   const appointmentsResponse = all[1].data;
-  //   const interviewersResponse = all[2].data;
-  //   // console.log("Interviewers Response!!!!",interviewersResponse);
-  //   // setState(prev => {
-  //   //   return ({...prev, days: daysResponse, appointments: appointmentsResponse, interviewers: interviewersResponse});
-  //   // })
-  //   dispatch({type:SET_APPLICATION_DATA, payload:{days: daysResponse, appointments: appointmentsResponse, interviewers: interviewersResponse}})
-  // })
 
   const cancelInterview = function (interviewId) {
     // const deleteAppointment = {...state.appointments[interviewId], interview: null};
@@ -124,7 +108,7 @@ export default function useApplicationData() {
   }
 
   const setDay = function (day) {
-    dispatch({ type: SET_DAY, value: day });
+    dispatch({ type: SET_DAY, payload: day });
   };
   // const setDay = function (day) {
   //   setState ((prevState) => ({...prevState, day: day}));
