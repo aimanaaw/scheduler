@@ -10,15 +10,18 @@ import Confirm from "./Confirm";
 import useVisualMode from "../../hooks/useVisualMode";
 import {getInterviewersForDay} from "../../helpers/selectors";
 
+// The different modes to be used in the transaction function
+const EMPTY = "EMPTY";
+const SHOW = "SHOW";
+const CREATE = "CREATE";
+const STATUS = "STATUS";
+const EDIT = "EDIT";
+const ERROR_SAVE = "ERROR_SAVE";
+const CONFIRM = "CONFIRM";
+const WebSocket = require("ws");
+
 
 export default function Appointment(props) {
-  const EMPTY = "EMPTY";
-  const SHOW = "SHOW";
-  const CREATE = "CREATE";
-  const STATUS = "STATUS";
-  const EDIT = "EDIT";
-  const ERROR_SAVE = "ERROR_SAVE";
-  const CONFIRM = "CONFIRM";
 
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
@@ -54,7 +57,6 @@ export default function Appointment(props) {
   function onCancel() {
     back();
   };
-  console.log(props.interview)
   return (
     <article className="appointment">
       <Header time={props.time} />
@@ -71,7 +73,7 @@ export default function Appointment(props) {
           onCancel={onCancel}
         />
       )}
-      {mode === SHOW && (
+      {mode === SHOW && props.interview && (
         <Show
           student={props.interview.student}
           interviewer={props.interview.interviewer}
