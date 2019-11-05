@@ -46,7 +46,7 @@ export default function Appointment(props) {
 
   function cancelInterview() {
     transition(STATUS);
-    props.cancelInterview(props.id).then(() => transition(EMPTY))
+    props.cancelInterview(props.id).then(() => transition(EMPTY)).catch(error => transition(ERROR_SAVE));
   }
 
   function onSave(enteredName, selectedInterviewer) {

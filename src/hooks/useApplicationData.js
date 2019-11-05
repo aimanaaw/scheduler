@@ -2,26 +2,27 @@ import React, { useState, useEffect, useReducer } from "react";
 import axios from "axios";
 import "components/Application.scss";
 import "../../src/components/Application.scss"
+import reducer, {SET_DAY, SET_INTERVIEW, SET_APPLICATION_DATA} from "../reducers/application"
 // import "./Appointment/styles.scss";
 const ws = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
 
-const SET_DAY = "SET_DAY";
-const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
-const SET_INTERVIEW = "SET_INTERVIEW";
+// const SET_DAY = "SET_DAY";
+// const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
+// const SET_INTERVIEW = "SET_INTERVIEW";
 
-function reducer(state, action) {
-  switch (action.type) {
-    case SET_DAY:
-      return { ...state, day: action.payload }
-    case SET_APPLICATION_DATA:
-      return { ...state, ...action.payload }
-    case SET_INTERVIEW:
-      return { ...state, ...action.payload }
-    default: throw new Error(
-      `Tried to reduce with unsupported action type: ${action.type}`
-    );
-  }
-}
+// function reducer(state, action) {
+//   switch (action.type) {
+//     case SET_DAY:
+//       return { ...state, day: action.payload }
+//     case SET_APPLICATION_DATA:
+//       return { ...state, ...action.payload }
+//     case SET_INTERVIEW:
+//       return { ...state, ...action.payload }
+//     default: throw new Error(
+//       `Tried to reduce with unsupported action type: ${action.type}`
+//     );
+//   }
+// }
 
 function spotCounter(state, id, interview) {
   let dayId = 0;
@@ -140,6 +141,7 @@ export default function useApplicationData() {
         //     dispatch({ type: SET_APPLICATION_DATA, payload: { days: daysResponse, appointments: appointmentsResponse, interviewers: interviewersResponse } })
         //   })
       })
+      // .catch(error => console.error("ERROR"))
   }
 
   const setDay = function (day) {
