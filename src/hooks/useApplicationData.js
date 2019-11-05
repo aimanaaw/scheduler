@@ -23,6 +23,29 @@ function reducer(state, action) {
   }
 }
 
+function spotCountIncrease(state, id) {
+  let dayId = 0;
+  if (id > 0 && id <= 5) {
+    dayId = 0;
+  } else if (id > 5 && id <= 10) {
+    dayId = 1;
+  } else if (id > 10 && id <= 15) {
+    dayId = 2;
+  } else if (id > 15 && id <= 20) {
+    dayId = 3;
+  } else if (id > 20 && id <= 25) {
+    dayId = 4;
+  }
+  console.log("THE ID & DayId", id, dayId);
+  const currentSpotCount = state.days[dayId].spots;
+  console.log("currentSpotCount", currentSpotCount);
+  const newSpotCount = currentSpotCount - 1;
+  console.log("newSpotCount", newSpotCount);
+  console.log("THE STATE IS ", state)
+
+  return state.days[dayId].spots = newSpotCount;
+}
+
 // days: action.payload.days,appointments: action.payload.appointments, interviewers: action.payload.interviewers
 
 export default function useApplicationData() {
@@ -47,7 +70,8 @@ export default function useApplicationData() {
           dispatch({
             type: SET_INTERVIEW,
             payload: { appointments: { ...state.appointments, [id]: { ...state.appointments[id], interview: interview } } }
-          })
+          });
+          spotCountIncrease(state, id);
           break;
         default:
           console.log("TESTING DEFAULT");
@@ -72,7 +96,6 @@ export default function useApplicationData() {
     console.log("BOOK INTERBIEW ID:", id, interview)
     const appt = { ...state.appointments[id], interview: interview }; return axios.put(`http://localhost:8001/api/appointments/` + id, appt)
       .then(() => {
-        console.log("ZZZZZ");
         dispatch({
           type: SET_INTERVIEW,
           payload: { appointments: { ...state.appointments, [id]: { ...state.appointments[id], interview: interview } } }

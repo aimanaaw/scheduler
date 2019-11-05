@@ -55,21 +55,51 @@ const fixtures = {
 
 
 export default {
+  defaults: { baseURL: "" },
   get: jest.fn(url => {
-    if (url === "/api/days") {
-      return Promise.resolve({
-        status: 200,
-        statusText: "OK",
-        data: fixtures.days
-      });
+    switch (url) {
+      case "http://localhost:8001/api/days":
+          return Promise.resolve({
+            status: 200,
+            statusText: "OK",
+            data: fixtures.days
+          });
+      case "http://localhost:8001/api/appointments":
+          return Promise.resolve({
+            status: 200,
+            statusText: "OK",
+            data: fixtures.appointments
+          });
+      case "http://localhost:8001/api/interviewers":
+          return Promise.resolve({
+            status: 200,
+            statusText: "OK",
+            data: fixtures.interviewers
+          });
+      default: throw  new Error(
+        "Error"
+      );
     }
-
-    if (url === "/api/appointments") {
-      /* Resolve appointments data */
-    }
-
-    if (url === "/api/interviewers") {
-      /* Resolve interviewers data */
-    }
+  }),
+  put: jest.fn(url => {
+    return Promise.resolve({
+      status: 204,
+      statusText: "No Content"
+    })
   })
 }
+    // if (url === "/api/days") {
+    //   return Promise.resolve({
+    //     status: 200,
+    //     statusText: "OK",
+    //     data: fixtures.days
+    //   });
+    // }
+
+    // if (url === "/api/appointments") {
+    //   /* Resolve appointments data */
+    // }
+
+    // if (url === "/api/interviewers") {
+    //   /* Resolve interviewers data */
+    // }
