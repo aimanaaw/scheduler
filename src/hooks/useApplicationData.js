@@ -23,7 +23,7 @@ function reducer(state, action) {
   }
 }
 
-function spotCountIncrease(state, id) {
+function spotCounter(state, id, interview) {
   let dayId = 0;
   if (id > 0 && id <= 5) {
     dayId = 0;
@@ -36,14 +36,16 @@ function spotCountIncrease(state, id) {
   } else if (id > 20 && id <= 25) {
     dayId = 4;
   }
-  console.log("THE ID & DayId", id, dayId);
+  // console.log("THE ID & DayId", id, dayId);
   const currentSpotCount = state.days[dayId].spots;
-  console.log("currentSpotCount", currentSpotCount);
-  const newSpotCount = currentSpotCount - 1;
-  console.log("newSpotCount", newSpotCount);
-  console.log("THE STATE IS ", state)
-
+  // console.log("currentSpotCount", currentSpotCount);
+  if (interview) {
+    const newSpotCount = currentSpotCount - 1;
+    return state.days[dayId].spots = newSpotCount;
+  };
+  const newSpotCount = currentSpotCount + 1;
   return state.days[dayId].spots = newSpotCount;
+
 }
 
 // days: action.payload.days,appointments: action.payload.appointments, interviewers: action.payload.interviewers
@@ -59,7 +61,7 @@ export default function useApplicationData() {
   useEffect(() => {
     ws.onmessage = (event) => {
       const receivedData = JSON.parse(event.data);
-      console.log("THE payload is", receivedData);
+      // console.log("THE payload is", receivedData);
       const id = receivedData.id;
       const interview = receivedData.interview;
       const type = receivedData.type;
@@ -71,10 +73,10 @@ export default function useApplicationData() {
             type: SET_INTERVIEW,
             payload: { appointments: { ...state.appointments, [id]: { ...state.appointments[id], interview: interview } } }
           });
-          spotCountIncrease(state, id);
+          spotCounter(state, id, interview);
           break;
         default:
-          console.log("TESTING DEFAULT");
+          // console.log("TESTING DEFAULT");
       }
     }
     ws.onopen = (() => {
@@ -93,7 +95,7 @@ export default function useApplicationData() {
 
 
   function bookInterview(id, interview) {
-    console.log("BOOK INTERBIEW ID:", id, interview)
+    // console.log("BOOK INTERBIEW ID:", id, interview)
     const appt = { ...state.appointments[id], interview: interview }; return axios.put(`http://localhost:8001/api/appointments/` + id, appt)
       .then(() => {
         dispatch({

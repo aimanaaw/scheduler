@@ -18,7 +18,6 @@ const STATUS = "STATUS";
 const EDIT = "EDIT";
 const ERROR_SAVE = "ERROR_SAVE";
 const CONFIRM = "CONFIRM";
-const WebSocket = require("ws");
 
 
 export default function Appointment(props) {
