@@ -96,11 +96,21 @@ export default function useApplicationData() {
 
   function bookInterview(id, interview) {
     // console.log("BOOK INTERBIEW ID:", id, interview)
-    const appt = { ...state.appointments[id], interview: interview }; return axios.put(`http://localhost:8001/api/appointments/` + id, appt)
+    const appt = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+    
+    return axios.put(`http://localhost:8001/api/appointments/` + id, appt)
       .then(() => {
         dispatch({
           type: SET_INTERVIEW,
-          payload: { appointments: { ...state.appointments, [id]: { ...state.appointments[id], interview: interview } } }
+          payload: {
+            appointments: {
+              ...state.appointments,
+              [id]: appt,
+            } 
+          }
         })
       })
   }

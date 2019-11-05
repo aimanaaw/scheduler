@@ -3,8 +3,12 @@ import React from "react";
 import { render, cleanup, waitForElement, fireEvent, prettyDOM, getByText, getAllByTestId, getByAltText, getByPlaceholderText, queryByText } from "@testing-library/react";
 
 import Application from "components/Application";
+import axios from "__mocks__/axios";
 
 afterEach(cleanup);
+beforeEach(() => {
+  axios.init();
+});
 
 describe("Application", () => {
 
@@ -84,7 +88,7 @@ describe("Application", () => {
     
     // console.log(prettyDOM(day));
 
-    expect(getByText(day, "1 spot remaining")).toBeInTheDocument();
+    expect(getByText(day, "2 spots remaining")).toBeInTheDocument();
   });
 
   it("loads data, edits an interview and keeps the spots remaining for Monday the same", async () => {
@@ -108,14 +112,17 @@ describe("Application", () => {
     expect(getByText(appointment, "Cancel")).toBeInTheDocument();
 
 
-    fireEvent.click(getByText(appointment, "Save"));
+    fireEvent.click(getByText(appointment, "Cancel"));
 
-    // const day = await waitForElement(() => getAllByTestId(container, "day").find(day =>
-    //   queryByText(day, "Monday"))
-    // );
-    expect(getByText(day, "1 spot remaining")).toBeInTheDocument();
-    console.log(prettyDOM(day));
+
+    const dayAgain = await waitForElement(() => getAllByTestId(container, "day").find(dayAgain =>
+      queryByText(dayAgain, "Monday"))
+    );
+    expect(getByText(dayAgain, "1 spot remaining")).toBeInTheDocument();
+    // console.log(prettyDOM(day));
   });
+
+  
 
 })
 
