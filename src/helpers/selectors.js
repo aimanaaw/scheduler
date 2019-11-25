@@ -24,7 +24,6 @@ export function getInterview(state, interview) {
 }
 
 export function getInterviewersForDay(state, day) {
-  const  appointments = getAppointmentsForDay(state, day);
 
   let interviewerIdArray = [];
 
