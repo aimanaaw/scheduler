@@ -3,26 +3,8 @@ import axios from "axios";
 import "components/Application.scss";
 import "../../src/components/Application.scss"
 import reducer, {SET_DAY, SET_INTERVIEW, SET_APPLICATION_DATA} from "../reducers/application"
-// import "./Appointment/styles.scss";
 const ws = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
 
-// const SET_DAY = "SET_DAY";
-// const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
-// const SET_INTERVIEW = "SET_INTERVIEW";
-
-// function reducer(state, action) {
-//   switch (action.type) {
-//     case SET_DAY:
-//       return { ...state, day: action.payload }
-//     case SET_APPLICATION_DATA:
-//       return { ...state, ...action.payload }
-//     case SET_INTERVIEW:
-//       return { ...state, ...action.payload }
-//     default: throw new Error(
-//       `Tried to reduce with unsupported action type: ${action.type}`
-//     );
-//   }
-// }
 
 function spotCounter(state, id, interview) {
   let dayId = 0;
@@ -37,9 +19,7 @@ function spotCounter(state, id, interview) {
   } else if (id > 20 && id <= 25) {
     dayId = 4;
   }
-  // console.log("THE ID & DayId", id, dayId);
   const currentSpotCount = state.days[dayId].spots;
-  // console.log("currentSpotCount", currentSpotCount);
   if (interview) {
     const newSpotCount = currentSpotCount - 1;
     return state.days[dayId].spots = newSpotCount;
@@ -49,7 +29,6 @@ function spotCounter(state, id, interview) {
 
 }
 
-// days: action.payload.days,appointments: action.payload.appointments, interviewers: action.payload.interviewers
 
 export default function useApplicationData() {
   const [state, dispatch] = useReducer(reducer, {
@@ -62,7 +41,6 @@ export default function useApplicationData() {
   useEffect(() => {
     ws.onmessage = (event) => {
       const receivedData = JSON.parse(event.data);
-      // console.log("THE payload is", receivedData);
       const id = receivedData.id;
       const interview = receivedData.interview;
       const type = receivedData.type;
@@ -77,7 +55,6 @@ export default function useApplicationData() {
           spotCounter(state, id, interview);
           break;
         default:
-          // console.log("TESTING DEFAULT");
       }
     }
     ws.onopen = (() => {
@@ -85,18 +62,7 @@ export default function useApplicationData() {
     });
   })
 
-
-
-  // const [state, setState] = useState({
-  //   day: "Monday",
-  //   days: [],
-  //   appointments: {},
-  //   interviewers: {}
-  // });
-
-
   function bookInterview(id, interview) {
-    // console.log("BOOK INTERBIEW ID:", id, interview)
     const appt = {
       ...state.appointments[id],
       interview: { ...interview }
@@ -117,43 +83,18 @@ export default function useApplicationData() {
   }
 
   const cancelInterview = function (interviewId) {
-    // const deleteAppointment = {...state.appointments[interviewId], interview: null};
     return axios.delete(`http://localhost:8001/api/appointments/` + interviewId)
       .then(() => {
-        // dispatch((prev) => ({...prev, appointments: {...prev.appointments, [interviewId]: {...prev.appointments[interviewId], interview:null}}}));
         dispatch({
           type: SET_INTERVIEW,
           payload: { appointments: { ...state.appointments, [interviewId]: { ...state.appointments[interviewId], interview: null } } }
         })
-        // Promise.all([
-        //   axios.get(`http://localhost:8001/api/days`),
-        //   axios.get(`http://localhost:8001/api/appointments`),
-        //   axios.get(`http://localhost:8001/api/interviewers`)
-        // ])
-        //   .then((all) => {
-        //     const daysResponse = all[0].data;
-        //     const appointmentsResponse = all[1].data;
-        //     const interviewersResponse = all[2].data;
-        //     // console.log("Interviewers Response!!!!",interviewersResponse);
-        //     // setState(prev => {
-        //     //   return ({...prev, days: daysResponse, appointments: appointmentsResponse, interviewers: interviewersResponse});
-        //     // })
-        //     dispatch({ type: SET_APPLICATION_DATA, payload: { days: daysResponse, appointments: appointmentsResponse, interviewers: interviewersResponse } })
-        //   })
       })
-      // .catch(error => console.error("ERROR"))
   }
 
   const setDay = function (day) {
     dispatch({ type: SET_DAY, payload: day });
   };
-  // const setDay = function (day) {
-  //   setState ((prevState) => ({...prevState, day: day}));
-  // };
-
-  // const setDays = function(days) {
-  //   dispatch(prev => ({ ...prev, days }));
-  // }
   useEffect(() => {
     Promise.all([
       axios.get(`http://localhost:8001/api/days`),
@@ -164,10 +105,6 @@ export default function useApplicationData() {
         const daysResponse = all[0].data;
         const appointmentsResponse = all[1].data;
         const interviewersResponse = all[2].data;
-        // console.log("Interviewers Response!!!!",interviewersResponse);
-        // setState(prev => {
-        //   return ({...prev, days: daysResponse, appointments: appointmentsResponse, interviewers: interviewersResponse});
-        // })
         dispatch({ type: SET_APPLICATION_DATA, payload: { days: daysResponse, appointments: appointmentsResponse, interviewers: interviewersResponse } })
       })
   }, []);
