@@ -3,15 +3,15 @@ export const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
 export const SET_INTERVIEW = "SET_INTERVIEW";
 
 export default function reducer(state, action) {
-  switch (action.type) {
+  switch(action.type) {
     case SET_DAY:
-      return { ...state, day: action.payload }
+      return {...state, day: action.value}
     case SET_APPLICATION_DATA:
-      return { ...state, ...action.payload }
+      return {...state, ...action.payload}
     case SET_INTERVIEW:
-      return { ...state, ...action.payload }
+      return {...state, ...action.payload} 
     default: throw new Error(
       `Tried to reduce with unsupported action type: ${action.type}`
-    );
+    );  
   }
 }

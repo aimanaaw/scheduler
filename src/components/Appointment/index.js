@@ -73,14 +73,14 @@ export default function Appointment(props) {
           onCancel={onCancel}
         />
       )}
-      {mode === SHOW && props.interview && (
+      {mode === SHOW && props.interview && 
         <Show
           student={props.interview.student}
           interviewer={props.interview.interviewer}
           onDelete={confirmDelete}
           onEdit={editFunction}
         />
-      )}
+      }
       {mode === EDIT && (
         <Form
           name={props.interview.student}
